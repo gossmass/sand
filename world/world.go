@@ -20,6 +20,8 @@ type Rule struct {
 	color  color.RGBA
 }
 
+const TILE_VOID TileID = 0
+
 func NewRule(action Action, color color.RGBA) *Rule {
 	return &Rule{
 		action: action,
@@ -27,7 +29,7 @@ func NewRule(action Action, color color.RGBA) *Rule {
 	}
 }
 
-func EmptyRule(w *World, x, y int) {}
+func emptyRule(w *World, x, y int) {}
 
 type World struct {
 	chunks      []Chunk
@@ -50,6 +52,7 @@ func New(width, height int, scale float32) *World {
 	w.rulesColors = make(map[color.RGBA]TileID)
 	w.buffer = make([]color.RGBA, width*height)
 	w.rt = rl.LoadRenderTexture(int32(width), int32(height))
+	w.AddRule(NewRule(emptyRule, rl.Blank), TILE_VOID)
 
 	return w
 }

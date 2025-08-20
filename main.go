@@ -8,31 +8,30 @@ import (
 )
 
 const (
-	TILE_VOID world.TileID = iota
-	TILE_SAND
+	TILE_SAND world.TileID = iota + 1
 	TILE_WATER
 
 	TILE_MAX
 )
 
 func sandRule(w *world.World, x, y int) {
-	if w.Get(x, y+1) == TILE_VOID {
+	if w.Get(x, y+1) == world.TILE_VOID {
 		w.Swap(x, y, x, y+1)
-	} else if w.Get(x-1, y+1) == TILE_VOID {
+	} else if w.Get(x-1, y+1) == world.TILE_VOID {
 		w.Swap(x, y, x-1, y+1)
-	} else if w.Get(x+1, y+1) == TILE_VOID {
+	} else if w.Get(x+1, y+1) == world.TILE_VOID {
 		w.Swap(x, y, x+1, y+1)
 	}
 }
 
 func waterRule(w *world.World, x, y int) {
-	if w.Get(x, y+1) == TILE_VOID {
+	if w.Get(x, y+1) == world.TILE_VOID {
 		w.Swap(x, y, x, y+1)
 	} else {
-		if w.Get(x-1, y) == TILE_VOID {
+		if w.Get(x-1, y) == world.TILE_VOID {
 			w.Swap(x, y, x-1, y)
 		}
-		if w.Get(x+1, y) == TILE_VOID {
+		if w.Get(x+1, y) == world.TILE_VOID {
 			w.Swap(x, y, x+1, y)
 		}
 	}
@@ -50,7 +49,6 @@ func main() {
 	rl.SetTargetFPS(60)
 
 	w := world.New(int(boardSize), int(boardSize), boardScale)
-	w.AddRule(world.NewRule(world.EmptyRule, rl.Blank), TILE_VOID)
 	w.AddRule(world.NewRule(sandRule, rl.Green), TILE_SAND)
 	w.AddRule(world.NewRule(waterRule, rl.Blue), TILE_WATER)
 
@@ -68,7 +66,7 @@ func main() {
 
 		if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
 			if cursorTileID+1 == TILE_MAX {
-				cursorTileID = TILE_VOID
+				cursorTileID = world.TILE_VOID
 			} else {
 				cursorTileID++
 			}
